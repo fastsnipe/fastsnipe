@@ -1,6 +1,9 @@
 # fastsnipe
 poorly coded c++ minecraft name sniper
 
+
+[discord](https://discord.gg/28cScs5)
+
 ## disclaimer
 you probably wont win any names with this if they're being sniped by anything else, the code is poorly written and rushed.
 
