@@ -32,6 +32,7 @@ DWORD WINAPI thread_snipe(LPVOID l_param) {
 	while (now < t) {
 		now = std::chrono::system_clock::now();
 	}
+	printf("[*] Attempting to change name (attempt %i/%i)\n", thread_id, config::threading::threads);
 	mojang::change_name(config::auth::uuid, config::auth::password, config::auth::token, config::wanted::name);
 	return 0;
 }
