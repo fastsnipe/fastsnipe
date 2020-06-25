@@ -36,7 +36,7 @@ int64_t mojang::get_time_of_change(const std::string uuid, const std::string nam
 		auto obj = j[i];
 		if (obj["name"].is_null())
 			continue;
-		if (obj["name"].get<std::string>() == name) {
+		if (_stricmp(obj["name"].get<std::string>().c_str(), name.c_str()) == 0) {
 			found = true;
 			found_idx = i + 1;
 		}

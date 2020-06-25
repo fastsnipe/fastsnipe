@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,1,0,2
- PRODUCTVERSION 0,1,0,2
+ FILEVERSION 0,1,0,3
+ PRODUCTVERSION 0,1,0,3
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,12 +69,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "https://github.com/fastsnipe/fastsnipe"
             VALUE "FileDescription", "FastSnipe CLI"
-            VALUE "FileVersion", "0.1.0-alpha.2"
+            VALUE "FileVersion", "0.1.0-alpha.3"
             VALUE "InternalName", "fastsnipe.exe"
             VALUE "LegalCopyright", "Copyright (C) 2020"
             VALUE "OriginalFilename", "fastsnipe.exe"
             VALUE "ProductName", "FastSnipe CLI"
-            VALUE "ProductVersion", "0.1.0-alpha.2"
+            VALUE "ProductVersion", "0.1.0-alpha.3"
         END
     END
     BLOCK "VarFileInfo"
