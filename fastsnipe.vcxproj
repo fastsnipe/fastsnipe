@@ -90,6 +90,7 @@
     <ClCompile Include="src\mojang\mojang.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\config\config.hpp" />
     <ClInclude Include="src\dependencies\constants.hpp" />
     <ClInclude Include="src\dependencies\common_includes.hpp" />
@@ -105,6 +106,9 @@
     <ClInclude Include="src\dependencies\json\json.hpp" />
     <ClInclude Include="src\http\http.hpp" />
     <ClInclude Include="src\mojang\mojang.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -29,21 +29,23 @@ int64_t mojang::get_time_of_change(const std::string uuid, const std::string nam
 	const auto res = http::get(url);
 	if (res.length() == 0)
 		return 0L;
-	int64_t time = 0;	
 	auto j = json::parse(res);
 	auto found = false;
-	for (auto& obj : j) {
+	auto found_idx = 0;
+	for (auto i = (j.size() - 1); i > 0; --i) {
+		auto obj = j[i];
 		if (obj["name"].is_null())
 			continue;
-		if (found) {
-			time = obj["changedToAt"].get<int64_t>();
-			break;
-		}
 		if (obj["name"].get<std::string>() == name) {
 			found = true;
+			found_idx = i + 1;
 		}
-	} 
-	return time;
+	}
+	if (!found) {
+		fprintf(stderr, "[!] Failed to calculate drop-time for your wanted name.\n");
+		return 0;
+	}
+	return j[found_idx]["changedToAt"].get<int64_t>();
 }
 
 void mojang::change_name(const std::string uuid, const std::string password, const std::string token, const std::string name) {
