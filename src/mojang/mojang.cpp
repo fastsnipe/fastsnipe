@@ -32,7 +32,7 @@ int64_t mojang::get_time_of_change(const std::string uuid, const std::string nam
 	auto j = json::parse(res);
 	auto found = false;
 	auto found_idx = 0;
-	for (auto i = (j.size() - 1); i > 0; --i) {
+	for (auto i = j.size(); i <= j.size(); --i) {
 		auto obj = j[i];
 		if (obj["name"].is_null())
 			continue;
