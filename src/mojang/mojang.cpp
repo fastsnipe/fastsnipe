@@ -58,3 +58,14 @@ void mojang::change_name(const std::string uuid, const std::string password, con
 	const auto res = http::post(url, d.dump().c_str(), token.c_str());
 	printf("name change resp %s\n", res.c_str());
 }
+
+bool mojang::got_name(const std::string wantedName, const std::string token) {
+	auto mc_resp = http::get("https://api.mojang.com/user/profiles/agent/minecraft", token.c_str());
+    auto mc_j = json::parse(mc_resp);
+    if (!mc_j.is_array() && !mc_j["error"].is_null()) {
+        // getting mc failed, error out
+		fprintf(stderr, "[!] Failed to access API to get Minecraft acc info. API reported %s: %s\n", mc_j["error"].get<std::string>().c_str(), mc_j["errorMessage"].get<std::string>().c_str());
+		return false;
+    }
+    return _stricmp(mc_j[0]["name"].get<std::string>().c_str(), wantedName.c_str()) == 0;
+}

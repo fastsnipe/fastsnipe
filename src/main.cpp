@@ -25,15 +25,23 @@ const auto DELAY = 50 / 1000; // account for time drift from mojang time
 DWORD WINAPI thread_snipe(LPVOID l_param) {
 	const auto thread_id = reinterpret_cast<int>(l_param);
 	auto now = std::chrono::system_clock::now();
-	const auto our_delay = (DELAY / config::threading::threads) * (thread_id + 1);
+	const auto our_delay = (DELAY / config::threading::threads) * (thread_id); // likely to be changed later
 	const auto p = std::chrono::system_clock::to_time_t(config::wanted::drop_time) - our_delay;
 	const auto t = std::chrono::system_clock::from_time_t(p);
 
 	while (now < t) {
 		now = std::chrono::system_clock::now();
 	}
-	printf("[*] Attempting to change name (attempt %i/%i)\n", thread_id, config::threading::threads);
+	//printf("[*] Attempting to change name (attempt %i/%i)\n", thread_id + 1, config::threading::threads);
 	mojang::change_name(config::auth::uuid, config::auth::password, config::auth::token, config::wanted::name);
+	if (thread_id == 0) {
+		// last thread to run
+		if (!mojang::got_name(config::wanted::name, config::auth::token)) {
+			printf("[*] Failed to acquire name. Sorry!\n");	
+		} else {
+			printf("[*] Acquired name \"%s\"\n", config::wanted::name.c_str());
+		}
+	}
 	return 0;
 }
 
@@ -70,7 +78,7 @@ int main(int argc, char* argv[]) {
 		config::wanted::drop_time = s;
 		printf("[*] Starting %i threads\n", config::threading::threads);
 		for (auto i = 0; i < config::threading::threads; i++) {
-			printf("[+] Started thread %i\n", i);
+			printf("[+] Started thread %i\n", i + 1);
 			CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(&thread_snipe), reinterpret_cast<LPVOID>(i), 0, 0);
 		}
 

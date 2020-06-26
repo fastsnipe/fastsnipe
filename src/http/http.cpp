@@ -33,7 +33,7 @@ std::string http::get(const char* url) {
 	return s;
 }
 
-std::string http::post(const char* url, json data) {
+std::string http::get(const char* url, const char* token) {
 	CURL* req = curl_easy_init();
 	std::string s;
 
@@ -41,9 +41,34 @@ std::string http::post(const char* url, json data) {
 	curl_easy_setopt(req, CURLOPT_USERAGENT, USER_AGENT);
 	curl_easy_setopt(req, CURLOPT_WRITEFUNCTION, curlwrite_callbackfunc_stdstring);
 	curl_easy_setopt(req, CURLOPT_WRITEDATA, &s);
-	curl_easy_setopt(req, CURLOPT_POSTFIELDS, data.dump().c_str());
+	struct curl_slist *chunk = nullptr;
+	chunk = curl_slist_append(chunk, (std::string("Authorization: Bearer ") + token).c_str());
+	chunk = curl_slist_append(chunk, "Charset: utf-8");
+	chunk = curl_slist_append(chunk, "Charset: utf-8");
+	curl_easy_setopt(req, CURLOPT_HTTPHEADER, chunk);
+	/*auto res = */ curl_easy_perform(req);
+	curl_easy_cleanup(req);
+
+#ifdef _DEBUG
+	printf("(http) GET %s - length %llu - str %s\n", url, s.length(), s.c_str());
+#endif
+	
+	return s;
+}
+
+
+std::string http::post(const char* url, const char* data) {
+	CURL* req = curl_easy_init();
+	std::string s;
+
+	curl_easy_setopt(req, CURLOPT_URL, url);
+	curl_easy_setopt(req, CURLOPT_USERAGENT, USER_AGENT);
+	curl_easy_setopt(req, CURLOPT_WRITEFUNCTION, curlwrite_callbackfunc_stdstring);
+	curl_easy_setopt(req, CURLOPT_WRITEDATA, &s);
+	curl_easy_setopt(req, CURLOPT_POSTFIELDS, data);
 	struct curl_slist *chunk = nullptr;
 	chunk = curl_slist_append(chunk, "Content-Type: application/json");
+	chunk = curl_slist_append(chunk, "Charset: utf-8");
 	curl_easy_setopt(req, CURLOPT_HTTPHEADER, chunk);
 	
 	/*auto res = */ curl_easy_perform(req);
