@@ -11,7 +11,7 @@ bool mojang::name_taken(std::string name) {
 }
 std::string mojang::get_uuid_for_prevname(std::string prevname) {
 	const auto now = std::chrono::system_clock::now();
-	const auto ts = (std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count() - 2629000L) / 1000L;
+	const auto ts = (std::chrono::duration_cast<std::chrono::seconds>(now.time_since_epoch()).count() - 3196800L);
 	char url[512] = "";
 	sprintf_s(url, 512, "https://api.mojang.com/users/profiles/minecraft/%s?at=%lld", prevname.c_str(), ts);
 	const auto res = http::get(url);
@@ -32,6 +32,7 @@ int64_t mojang::get_time_of_change(const std::string uuid, const std::string nam
 	auto j = json::parse(res);
 	auto found = false;
 	auto found_idx = 0;
+	printf("(dbg) get_time_of_change called\n");
 	for (auto i = j.size(); i <= j.size(); --i) {
 		auto obj = j[i];
 		if (obj["name"].is_null())
@@ -39,7 +40,9 @@ int64_t mojang::get_time_of_change(const std::string uuid, const std::string nam
 		if (_stricmp(obj["name"].get<std::string>().c_str(), name.c_str()) == 0) {
 			found = true;
 			found_idx = i + 1;
+			break;
 		}
+		printf("%llu - %s\n", i, obj.dump().c_str());
 	}
 	if (!found) {
 		fprintf(stderr, "[!] Failed to calculate drop-time for your wanted name.\n");

@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
 		const auto now = std::chrono::system_clock::now();
 		const auto s = std::chrono::system_clock::from_time_t(drop_time / 1000);
 		const auto t = std::chrono::system_clock::to_time_t(s);
-		
+		printf("drop time: %lld, s: %lld now: %lld\n", drop_time, s, now);
 		if (now > s) {
 			fprintf(stderr, "[!] Wanted name \"%s\" has already dropped!\n", config::wanted::name.c_str());
 			return 1;
