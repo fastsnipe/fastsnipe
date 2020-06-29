@@ -1,8 +1,10 @@
 #include "config/config.hpp"
 #include "dependencies/common_includes.hpp"
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include "mojang/mojang.hpp"
+#include "proxy/proxy.hpp"
 
 bool search_for_config_and_load() {
 	if (!std::filesystem::exists("config.json")) {
@@ -20,7 +22,7 @@ bool search_for_config_and_load() {
 	return false;
 }
 
-const auto DELAY = 50 / 1000; // account for time drift from mojang time
+auto DELAY = 50 / 1000; // account for time drift from mojang time
 
 DWORD WINAPI thread_snipe(LPVOID l_param) {
 	const auto thread_id = reinterpret_cast<int>(l_param);
@@ -31,6 +33,7 @@ DWORD WINAPI thread_snipe(LPVOID l_param) {
 
 	while (now < t) {
 		now = std::chrono::system_clock::now();
+		Sleep(1); // stop cpu usage spiking
 	}
 	//printf("[*] Attempting to change name (attempt %i/%i)\n", thread_id + 1, config::threading::threads);
 	mojang::change_name(config::auth::uuid, config::auth::password, config::auth::token, config::wanted::name);
@@ -53,6 +56,16 @@ int main(int argc, char* argv[]) {
 		}
 		printf("[*] Loaded config.\nAccount email: %s\nWanted name: %s\n", config::auth::email.c_str(), config::wanted::name.c_str());
 
+		//proxy::initialize();
+		
+		if (config::threading::no_delay) {
+			DELAY = 0;
+		}
+		if (!mojang::validate(config::auth::token)) {
+			fprintf(stderr, "[!] Error validating access token. Mojang returned: %s\nExiting.\n", mojang::last_error.c_str());
+			return 1;
+		}
+		
 		const auto name_taken = mojang::name_taken(config::wanted::name);
 		if (name_taken) {
 			fprintf(stderr, "[!] Wanted name \"%s\" is already taken.\n", config::wanted::name.c_str());
@@ -81,8 +94,8 @@ int main(int argc, char* argv[]) {
 			printf("[+] Started thread %i\n", i + 1);
 			CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(&thread_snipe), reinterpret_cast<LPVOID>(i), 0, 0);
 		}
-
-		while(true){}
+		printf("[*] Press enter to exit (do not press anything until it attempts to snipe!)\n");
+		std::cin.get();
 	} catch(std::exception &ex) {
 		fprintf(stderr, "[!] An error occurred in the main process\n%s\n\nExiting.\n", ex.what());
 		return 1;

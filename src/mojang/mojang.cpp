@@ -1,6 +1,10 @@
 #include "mojang.hpp"
 #include "../http/http.hpp"
 
+namespace mojang {
+	std::string last_error;
+}
+
 bool mojang::name_taken(std::string name) {
 	if (name.length() > 16) {
 		return false; // name is longer than 16 letters
@@ -71,4 +75,15 @@ bool mojang::got_name(const std::string wantedName, const std::string token) {
 		return false;
     }
     return _stricmp(mc_j[0]["name"].get<std::string>().c_str(), wantedName.c_str()) == 0;
+}
+
+bool mojang::validate(const std::string token) {
+	json j = {
+		{"accessToken", token}
+	};
+	auto resp = http::post("https://authserver.mojang.com/validate", j.dump().c_str());
+	if (resp.length() == 0) return true;
+	auto j2 = json::parse(resp);
+	last_error = j2["errorMessage"].get<std::string>();
+	return false;
 }

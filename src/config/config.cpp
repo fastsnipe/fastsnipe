@@ -14,21 +14,23 @@ namespace config {
 
 	namespace threading {
 		int threads = 10;
+		bool no_delay = false;
 	}
 }
 
 void config::decode(const std::string cfg) {
 	auto j = json::parse(cfg);
-	if (!j["auth"].is_null()) {
-		if (!j["auth"]["email"].is_null()) auth::email = j["auth"]["email"].get<std::string>();
-		if (!j["auth"]["password"].is_null()) auth::password = j["auth"]["password"].get<std::string>();
-		if (!j["auth"]["uuid"].is_null()) auth::uuid = j["auth"]["uuid"].get<std::string>();
-		if (!j["auth"]["token"].is_null()) auth::token = j["auth"]["token"].get<std::string>();
+	if (j.contains("auth")) {
+		if (j["auth"].contains("email")) auth::email = j["auth"]["email"].get<std::string>();
+		if (j["auth"].contains("password")) auth::password = j["auth"]["password"].get<std::string>();
+		if (j["auth"].contains("uuid")) auth::uuid = j["auth"]["uuid"].get<std::string>();
+		if (j["auth"].contains("token")) auth::token = j["auth"]["token"].get<std::string>();
 	}
-	if (!j["wanted"].is_null()) {
-		if (!j["wanted"]["name"].is_null()) wanted::name = j["wanted"]["name"].get<std::string>();
+	if (j.contains("wanted")) {
+		if (j["wanted"].contains("name")) wanted::name = j["wanted"]["name"].get<std::string>();
 	}
-	if (!j["threading"].is_null()) {
-		if (!j["threading"]["threads"].is_null()) threading::threads = j["threading"]["threads"].get<int>();
+	if (j.contains("threading")) {
+		if (j["threading"].contains("threads")) threading::threads = j["threading"]["threads"].get<int>();
+		if (j["threading"].contains("no_delay")) threading::no_delay = j["threading"]["no_delay"].get<bool>();
 	}
 }

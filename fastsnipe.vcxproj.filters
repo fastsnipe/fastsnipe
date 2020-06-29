@@ -27,6 +27,9 @@
     <ClCompile Include="src\mojang\mojang.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\proxy\proxy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\dependencies\curl\curl.h">
@@ -75,6 +78,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\proxy\proxy.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

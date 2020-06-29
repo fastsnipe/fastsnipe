@@ -88,6 +88,7 @@
     <ClCompile Include="src\http\http.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\mojang\mojang.cpp" />
+    <ClCompile Include="src\proxy\proxy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -106,6 +107,7 @@
     <ClInclude Include="src\dependencies\json\json.hpp" />
     <ClInclude Include="src\http\http.hpp" />
     <ClInclude Include="src\mojang\mojang.hpp" />
+    <ClInclude Include="src\proxy\proxy.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

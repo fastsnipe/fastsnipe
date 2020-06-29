@@ -15,6 +15,7 @@ namespace config {
 
 	namespace threading {
 		extern int threads;
+		extern bool no_delay;
 	}
 
 	void decode(std::string cfg);
